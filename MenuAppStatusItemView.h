@@ -29,12 +29,12 @@
 */
 @interface MenuAppStatusItemView : NSView
 {
-	NSColor *startingColor;
-	NSColor *endingColor;
+	NSColor *__strong startingColor;
+	NSColor *__strong endingColor;
 	BOOL enabled;
 }
-@property(assign) NSColor *startingColor;
-@property(assign) NSColor *endingColor;
+@property(strong) NSColor *startingColor;
+@property(strong) NSColor *endingColor;
 
 /*! @abstract If not enabled, no gradient is displayed */
 @property(assign) BOOL enabled;

@@ -12,12 +12,12 @@
 @interface MenuAppHotKey : NSObject {
 	int modifierFlags;
 	int identifier;
-	NSString* key;
-	NSString* name;
+	NSString* __strong key;
+	NSString* __strong name;
 }
 @property(assign) int modifierFlags;		//kEventParamKeyModifiers = cmdKey, shiftKey, alphaLock, optionKey, controlKey, kEventKeyModifierFnMask
 @property(assign) int identifier;
-@property(assign) NSString* key;
-@property(assign) NSString* name;
+@property(strong) NSString* key;
+@property(strong) NSString* name;
 
 @end

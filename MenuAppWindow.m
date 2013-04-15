@@ -19,14 +19,6 @@
 
 static BOOL resizing=NO;
 
-@interface NSObject (DelegateMethods)
-
-- (void)showMenuWindowAttached;
-- (void)showMenuWindowDetached;
-
-@end
-
-
 @implementation MenuAppWindow
 @synthesize statuesView;
 
@@ -43,13 +35,6 @@ static BOOL resizing=NO;
     return self;
 }
 
-- (void)dealloc
-{
-    if (resizeImage) {
-		[resizeImage release];
-    }
-    [super dealloc];
-}
 
 - (void)setGrowBoxInScroll:(BOOL)flag
 {
@@ -124,7 +109,6 @@ static BOOL resizing=NO;
 - (void)orderOut:(id)sender
 {
     if (resizeImage) {
-	[resizeImage release];
 	resizeImage=nil;
     }
     [super orderOut:sender];
@@ -208,7 +192,7 @@ static BOOL resizing=NO;
 		NSPoint sp = [[statuesView window] convertBaseToScreen: NSMakePoint(0, 0)];
 		float menuBarHieght = [[[NSApplication sharedApplication] mainMenu] menuBarHeight];
 		//TODO: Snapping
-		if ([[[NSScreen screens] objectAtIndex:0] isEqual:[self screen]]
+		if ([[NSScreen screens][0] isEqual:[self screen]]
 			&& ((newOrigin.y + [self frame].size.height) > [[self screen] frame].size.height - (menuBarHieght + 5))) {
 			newOrigin.y = [[self screen] frame].size.height - menuBarHieght - [self frame].size.height;
 			BOOL willSnap = NO;
@@ -224,20 +208,20 @@ static BOOL resizing=NO;
 				if(!attached) {
 					attached = YES;
 					willSnap = NO;
-					[[self delegate] showMenuWindowDetached];
+					[((NSObject*)[self delegate]) showMenuWindowDetached];
 				}
 			}
 			
 			//Do the actual attaching
 			if(attached && willSnap) { 
 				attached = NO;
-				[[self delegate] showMenuWindowAttached];
+				[((NSObject*)[self delegate]) showMenuWindowAttached];
 			}
 			
 		} else {
 			if(!attached) {
 				attached = YES;
-				[[self delegate] showMenuWindowDetached];
+				[((NSObject*)[self delegate]) showMenuWindowDetached];
 			}
 		}
 		
@@ -291,7 +275,7 @@ static BOOL resizing=NO;
 
 - (NSSize)haveDelegateCheckSize:(NSSize)aSize
 {
-    NSInvocation *resizeInv=[NSInvocation invocationWithMethodSignature:[[self delegate] methodSignatureForSelector:@selector(windowWillResize:toSize:)]];
+    NSInvocation *resizeInv=[NSInvocation invocationWithMethodSignature:[((NSObject*)[self delegate]) methodSignatureForSelector:@selector(windowWillResize:toSize:)]];
     NSSize newSize;
     NSPoint convertedPoint;
     //NSWindow's reference says the size sent is in screen coordinates,
@@ -303,7 +287,7 @@ static BOOL resizing=NO;
     newSize.height=convertedPoint.y;
     [resizeInv setTarget:[self delegate]];
     [resizeInv setSelector:@selector(windowWillResize:toSize:)];
-    [resizeInv setArgument:self atIndex:2];
+    [resizeInv setArgument:(__bridge void *)(self) atIndex:2];
     [resizeInv setArgument:&newSize atIndex:3];
     [resizeInv invoke];
     [resizeInv getReturnValue:&newSize];
@@ -400,7 +384,6 @@ static BOOL resizing=NO;
     [closeButton setTarget:self];
     [closeButton setFocusRingType:NSFocusRingTypeNone];
     [closeButton setAction:@selector(orderOut:)];
-    [closeButton release];
 }
 
 - (BOOL)isSnapedToWidget {
@@ -408,7 +391,7 @@ static BOOL resizing=NO;
 	NSPoint newOrigin = [self frame].origin;
 	float menuBarHieght = [[[NSApplication sharedApplication] mainMenu] menuBarHeight];
 
-	if ([[[NSScreen screens] objectAtIndex:0] isEqual:[self screen]] //check that we have the right screen
+	if ([[NSScreen screens][0] isEqual:[self screen]] //check that we have the right screen
 			&& (([self frame].origin.y + [self frame].size.height) > [[self screen] frame].size.height - (menuBarHieght + 5)) //Top
 			&& ( (newOrigin.x > (sp.x-30) && newOrigin.x < (sp.x+30))  //left side.
 			|| ( newOrigin.x+[self frame].size.width < sp.x+60 && newOrigin.x+[self frame].size.width > sp.x-5) ) ) //rightside

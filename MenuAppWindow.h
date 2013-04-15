@@ -19,6 +19,11 @@
 			
 #import "MenuAppController.h"
 
+@interface NSObject (DelegateMethods)
+- (void)showMenuWindowAttached;
+- (void)showMenuWindowDetached;
+@end
+
 @interface MenuAppWindow : NSWindow
 {
     NSPoint initialLocation;
@@ -30,10 +35,10 @@
     BOOL canClose;
     BOOL canMove;
 	
-	NSView* statuesView;	//The view that this window is snapped to;
+	NSView* __strong statuesView;	//The view that this window is snapped to;
 	BOOL attached;
 }
-@property (assign) NSView* statuesView;
+@property (strong) NSView* statuesView;
 
 - (void)setGrowBoxInScroll:(BOOL)flag;
 - (void)setCanMiniaturize:(BOOL)flag;

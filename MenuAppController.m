@@ -36,7 +36,7 @@
 - (void)commonInit {
 	self.isWindowAttached = YES;
 	self.windowLevel = NSTornOffMenuWindowLevel;
-	self.statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
+	self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
 
 	if(![NSBundle loadNibNamed:@"MenuWindow" owner:self]) {
 		NSAssert(NO, @"MenuAppController could not load nib named 'MenuWindow.xib'");
@@ -182,14 +182,6 @@
 	}
 }
 
-- (void)dealloc {
-	[statusItem release];
-	[menuWindow release];
-	[statusItemView release];
-	[menuWindowContent release];
-	[toggleButton release];
-	[super dealloc];
-}
 
 #pragma mark HotKey Support 
 
@@ -285,7 +277,7 @@ OSStatus MyHotKeyHandler(EventHandlerCallRef nextHandler, EventRef theEvent, voi
 	
 	int identifier = hotKeyID.id;
 	
-	MenuAppController* controller = userData;
+	MenuAppController* controller = (__bridge MenuAppController *)(userData);
 	MenuAppHotKey* hotKey = nil;
 	for(MenuAppHotKey* ahotKey in controller.modifierKeys) {
 		if(ahotKey.identifier == identifier) {
@@ -314,7 +306,7 @@ OSStatus MyHotKeyHandler(EventHandlerCallRef nextHandler, EventRef theEvent, voi
 		EventTypeSpec eventType = { kEventClassKeyboard, kEventHotKeyPressed };
 		
 		//Register the application for the hotkey
-		InstallApplicationEventHandler(&MyHotKeyHandler, 1, &eventType, self, NULL);
+		InstallApplicationEventHandler(&MyHotKeyHandler, 1, &eventType,  (__bridge void*)self, NULL);
 
 		if(noErr != RegisterEventHotKey([self codeForKey:key.key], key.modifierFlags, hotKeyID, GetApplicationEventTarget(), 0, &refKeys[i])) {
 			NSLog(@"+++ FAILURE TO REGISTER HOTKEY +++");

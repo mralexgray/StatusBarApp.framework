@@ -25,9 +25,9 @@
 @class MenuAppStatusItemView;
 
 @interface MenuAppController : NSObject {
-	id delegate;							//The MenuAppDelegate
-	NSStatusItem * statusItem;				//The NSStatusItem that toggles the menu app display
-	MenuAppWindow * menuWindow;				//The menu's window that gets shown (attached to menu)
+	id __strong delegate;							//The MenuAppDelegate
+	NSStatusItem * __strong statusItem;				//The NSStatusItem that toggles the menu app display
+	MenuAppWindow * __strong menuWindow;				//The menu's window that gets shown (attached to menu)
 	MenuAppStatusItemView * statusItemView;	//The view that gets displayed in the menubar (acts as button)
 	NSView * menuWindowContent;				//User supplied content that gets drawn in the window.
 	BOOL isWindowAttached;
@@ -38,16 +38,16 @@
 	NSArray* modifierKeys;					//An array of MenuAppHotKey's used to setup global hotkey support
 	EventHotKeyRef refKeys[100];
 }
-@property (assign) id delegate;
-@property (assign) MenuAppWindow * menuWindow;
-@property (assign) NSStatusItem * statusItem;
-@property (assign) NSImage* menuIconImage;
-@property (assign) NSImage* menuIconAltImage;
-@property (assign) NSMenu* menuRightClickMenu;
-@property (assign) NSArray* modifierKeys;
+@property (strong) id delegate;
+@property (strong) MenuAppWindow * menuWindow;
+@property (strong) NSStatusItem * statusItem;
+@property (strong) NSImage* menuIconImage;
+@property (strong) NSImage* menuIconAltImage;
+@property (strong) NSMenu* menuRightClickMenu;
+@property (strong) NSArray* modifierKeys;
 
 /*!	@abstract The content that gets placed in the pulloff window */
-@property (assign) NSView* windowContentView;
+@property (strong) NSView* windowContentView;
 
 @property (assign) NSRect initialWindowSize;
 

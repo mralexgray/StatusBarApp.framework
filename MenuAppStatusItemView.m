@@ -54,10 +54,5 @@
 	
 }
 
-- (void)dealloc {
-	[startingColor release];
-	[endingColor release];
-	[super dealloc];
-}
 
 @end
