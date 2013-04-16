@@ -20,81 +20,20 @@
 static BOOL resizing=NO;
 
 @implementation MenuAppWindow
-@synthesize statuesView;
+@synthesize statuesView, canClose, canMiniaturize, canResize, canMove, growBoxInScroll;
 
-- (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
-    if ((self = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:bufferingType defer:flag])) {
-	//Add any additional initialization you need here
-		[self setCanMove:YES];
-		[self setGrowBoxInScroll:NO];
-		[self setCanResize:YES];
-		[self setCanClose:YES];
-		attached = YES;
+- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
+	if (self != [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:bufferingType defer:flag]) return nil;
+	self.canMove 			= YES;
+	self.growBoxInScroll = YES;
+	self.canResize			= YES;
+	self.canClose			= NO;
+	self.minSize 			= NSMakeSize(100, 100);
+	attached 				= YES;
 	//	[self addCloseWidget];
-	}
-    return self;
+	return self;
 }
 
-
-- (void)setGrowBoxInScroll:(BOOL)flag
-{
-    growBoxInScroll=flag;
-}
-
-- (void)setCanMiniaturize:(BOOL)flag
-{
-    canMiniaturize=flag;
-}
-
-- (void)setCanResize:(BOOL)flag
-{
-    canResize=flag;
-}
-
-- (void)setCanClose:(BOOL)flag
-{
-    canClose=flag;
-}
-
-- (void)setCanMove:(BOOL)flag
-{
-    canMove=flag;
-}
-
-- (BOOL)growBoxInScroll
-{
-    return growBoxInScroll;
-}
-
-- (BOOL)canMiniaturize
-{
-    return canMiniaturize;
-}
-
-- (BOOL)canResize
-{
-    return canResize;
-}
-
-- (BOOL)canClose
-{
-    return canClose;
-}
-
-- (BOOL)canMove
-{
-    return canMove;
-}
-
-- (BOOL)canBecomeKeyWindow
-{
-    return YES;
-}
-
-- (BOOL)canBecomeMainWindow
-{
-    return YES;
-}
 
 - (NSString *)miniwindowTitle
 {
